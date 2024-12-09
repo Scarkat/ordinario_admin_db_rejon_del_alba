@@ -1,28 +1,60 @@
-const { getData, sendData} = require('../helpers/dbhelper.js');
+const { getData, sendData } = require('../helpers/dbhelper.js');
 
-const getEstudiantes = (req, res) => {
-    getData('estudiantes', res);
+const getEstudiantes = async (req, res) => {
+    try {
+        const results = await getData('estudiantes');
+        res.json(results);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener estudiantes', details: error.message });
+    }
 }
 
-const createEstudiante = (req, res) => {
-    const { nombre, apellidos, email, matricula, edad, semestre, usuario_creacion } = req.body;
-    if(!nombre || !apellidos || !email || !matricula || !edad || !semestre || !usuario_creacion)
-    {
-        return res.status(400).json({ error: 'Datos faltantes'});
+const createEstudiante = async (req, res) => {
+    try {
+        const { nombre, apellidos, email, matricula, edad, semestre, usuario_creacion } = req.body;
+        
+        // Validación de campos requeridos
+        const camposRequeridos = { nombre, apellidos, email, matricula, edad, semestre, usuario_creacion };
+        const camposFaltantes = Object.entries(camposRequeridos)
+            .filter(([_, value]) => !value)
+            .map(([key]) => key);
+
+        if (camposFaltantes.length > 0) {
+            return res.status(400).json({ 
+                error: 'Datos faltantes',
+                camposFaltantes: camposFaltantes 
+            });
+        }
+
+        // Validación de edad
+        if (isNaN(edad) || edad < 0) {
+            return res.status(400).json({ error: 'Edad debe ser un número válido' });
+        }
+
+        // Validación básica de email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: 'Email inválido' });
+        }
+
+        const fecha_creacion = new Date().toISOString().slice(0,19).replace('T', ' ');
+
+        const query = `
+            INSERT INTO estudiantes 
+            (nombre, apellidos, email, matricula, edad, semestre, usuario_creacion, fecha_creacion) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        const values = [nombre, apellidos, email, matricula, edad, semestre, usuario_creacion, fecha_creacion];
+
+        const result = await sendData(query, values);
+        res.status(201).json({
+            message: 'Estudiante creado exitosamente',
+            id: result.insertId
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al crear estudiante', details: error.message });
     }
-
-    if(isNaN(edad))
-    {
-        return res.status(400).json({ error: 'Edad debe ser número'});
-    }
-
-    const fecha_creacion = new Date().toISOString().slice(0,19).replace('T', '');
-
-    const query = 'INSERT INTO estudiantes (nombre, apellidos, email, matricula, edad, semestre, usuario_creacion, fecha_creacion) VALUES (?,?,?,?,?,?,?,?)';
-
-    const values = [ nombre, apellidos, email, matricula, edad, semestre, usuario_creacion, fecha_creacion ];
-
-    sendData(query, values, res);
 }
 
-module.exports = {getEstudiantes, createEstudiante};
+module.exports = { getEstudiantes, createEstudiante };

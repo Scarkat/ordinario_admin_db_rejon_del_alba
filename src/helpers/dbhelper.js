@@ -1,26 +1,27 @@
 const con = require('../config/database.js');
 
 const getData = (tabla, res) => {
-    const query = 'SELECT * FROM ??' // Medida de seguridad. Reemplaza el ?? por los valores de la tabla.
-    con.query(query, [tabla], (err, results) => {
-        if(err)
-        {
-            console.log("Ejecución fallida del query: ", err);
-            return res.status(500).json({error: 'query a la database fallida.'}) // Error de servidor HTTP.
-        }
-
-        return res.json(results); // No hace falta especificar el status porque por defecto es satisfactorio.
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM ??';
+        con.query(query, [tabla], (err, results) => {
+            if(err) {
+                console.log("Ejecución fallida del query: ", err);
+                reject(err);
+            }
+            resolve(results);
+        });
     });
 }
 
 const sendData = (query, values, res) => {
-    con.query(query, values, (err, results) => {
-        if(err)
-        {
-            return res.status(500).json({error: err.message});
-        }
-
-        res.status(201).json({message: 'Elemento creado. ', id:results.id}) // Se creó según el procolo 201.
+    return new Promise((resolve, reject) => {
+        con.query(query, values, (err, results) => {
+            if(err) {
+                console.error("Error en sendData:", err);
+                reject(err);
+            }
+            resolve(results);
+        });
     });
 }
 
@@ -44,4 +45,17 @@ const getID = (table, field, value) => {
     });
 }
 
-module.exports = { getData, sendData, getID };
+const checkExists = (tabla, campo, valor) => {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT COUNT(*) as count FROM ${tabla} WHERE ${campo} = ?`;
+        
+        con.query(query, [valor], (error, results) => {
+            if (error) {
+                reject(new Error(`Error al verificar ${campo} en ${tabla}`));
+            }
+            resolve(results[0].count > 0);
+        });
+    });
+}
+
+module.exports = { getData, sendData, getID, checkExists };
