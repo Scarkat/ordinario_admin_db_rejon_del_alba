@@ -1,61 +1,46 @@
-const con = require('../config/database.js');
+const db = require('../config/database.js');
 
-const getData = (tabla, res) => {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM ??';
-        con.query(query, [tabla], (err, results) => {
-            if(err) {
-                console.log("Ejecución fallida del query: ", err);
-                reject(err);
-            }
-            resolve(results);
-        });
-    });
-}
+const getData = async (tabla) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM ??', [tabla]);
+        return rows;
+    } catch (error) {
+        console.error("Error en getData:", error);
+        throw error;
+    }
+};
 
-const sendData = (query, values, res) => {
-    return new Promise((resolve, reject) => {
-        con.query(query, values, (err, results) => {
-            if(err) {
-                console.error("Error en sendData:", err);
-                reject(err);
-            }
-            resolve(results);
-        });
-    });
-}
+const sendData = async (query, values) => {
+    try {
+        const [result] = await db.query(query, values);
+        return result;
+    } catch (error) {
+        console.error("Error en sendData:", error);
+        throw error;
+    }
+};
 
-const getID = (table, field, value) => {
-    return new Promise( (resolve, reject) => {
-        const query = 'SELECT id FROM ?? WHERE ?? = ? LIMIT 1';
+const getID = async (table, field, value) => {
+    try {
+        const [rows] = await db.query('SELECT id FROM ?? WHERE ?? = ?', [table, field, value]);
+        if (rows.length === 0) {
+            throw new Error('No hay registros con esos datos.');
+        }
+        return rows[0].id;
+    } catch (error) {
+        console.error("Error en getID:", error);
+        throw error;
+    }
+};
 
-        con.query(query, [table, field, value], (err, results) => {
-            if(err) 
-            {
-                return reject(new Error('Query no completado.'));
-            }
-            
-            if(results.length == 0)
-            {
-                return reject(new Error('No hay registros con esos datos.'))
-            }
-            
-            resolve(results[0].id);
-        })
-    });
-}
-
-const checkExists = (tabla, campo, valor) => {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT COUNT(*) as count FROM ${tabla} WHERE ${campo} = ?`;
-        
-        con.query(query, [valor], (error, results) => {
-            if (error) {
-                reject(new Error(`Error al verificar ${campo} en ${tabla}`));
-            }
-            resolve(results[0].count > 0);
-        });
-    });
-}
+const checkExists = async (tabla, campo, valor) => {
+    try {
+        const [rows] = await db.query('SELECT COUNT(*) as count FROM ?? WHERE ?? = ?', [tabla, campo, valor]);
+        return rows[0].count > 0;
+    } catch (error) {
+        console.error("Error en checkExists:", error);
+        throw error;
+    }
+};
 
 module.exports = { getData, sendData, getID, checkExists };
