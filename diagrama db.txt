@@ -1,0 +1,43 @@
+Table estudiantes {
+  id integer [primary key, increment]
+  nombre varchar(150) [not null]
+  apellidos varchar(200) [not null]
+  email varchar(100) [not null]
+  matricula varchar(100) [not null]
+  edad integer [not null]
+  semestre varchar(255) [not null]
+  usuario_creacion varchar(100) [not null]
+  fecha_creacion datetime [not null]
+}
+
+Table maestros {
+  id integer [primary key, increment]
+  nombre varchar(255) [not null]
+  edad integer [not null]
+  telefono bigint [not null]
+  correo varchar(255) [not null]
+  usuario_creacion varchar(100) [not null]
+  fecha_creacion datetime [not null]
+}
+
+Table materias {
+  id integer [primary key, increment]
+  nombre varchar(255) [not null]
+  profesor_id integer [not null]
+  create_user varchar(100) [not null]
+  create_date datetime [not null]
+}
+
+Table calificaciones {
+  id integer [primary key, increment]
+  estudiante_id integer [not null]
+  maestro_id integer [not null]
+  materia_id integer [not null]
+  calificacion decimal(5,2) [not null]
+  create_user varchar(100) [not null]
+  create_date datetime [not null]
+}
+
+Ref: calificaciones.estudiante_id > estudiantes.id
+Ref: calificaciones.maestro_id > maestros.id
+Ref: calificaciones.materia_id > materias.id

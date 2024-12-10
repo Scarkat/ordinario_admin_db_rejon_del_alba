@@ -1,0 +1,242 @@
+{
+	"info": {
+		"_postman_id": "60f1f1aa-7a37-4ecf-a7d3-ef77c6002029",
+		"name": "ordinario-DB-rejon-deAlba",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40289974"
+	},
+	"item": [
+		{
+			"name": "estudiates",
+			"item": [
+				{
+					"name": "estudiantes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "54.234.110.157:3000/api/estudiantes",
+							"host": [
+								"54",
+								"234",
+								"110",
+								"157"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"estudiantes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "estudiantes",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"{{$randomFirstName}}\",\n    \"apellidos\": \"{{$randomLastName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"matricula\": \"{{$randomWord}}\",\n    \"edad\": \"{{$randomInt}}\",\n    \"semestre\": \"{{$randomInt}}\",\n    \"usuario_creacion\": \"{{$randomUserName}}\",\n    \"fecha_creacion\": \"{{$timestamp}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "54.234.110.157:3000/api/estudiantes",
+							"host": [
+								"54",
+								"234",
+								"110",
+								"157"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"estudiantes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "maestros",
+			"item": [
+				{
+					"name": "maestros",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "54.234.110.157:3000/api/maestros",
+							"host": [
+								"54",
+								"234",
+								"110",
+								"157"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"maestros"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "maestros",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"{{$randomFirstName}} {{$randomLastName}}\",\n    \"edad\": {{$randomInt}},\n    \"telefono\": {{$randomInt}},\n    \"correo\": \"{{$randomEmail}}\",\n    \"usuario_creacion\": \"{{$randomUserName}}\",\n    \"fecha_creacion\": \"{{$timestamp}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "54.234.110.157:3000/api/maestros",
+							"host": [
+								"54",
+								"234",
+								"110",
+								"157"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"maestros"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "materias",
+			"item": [
+				{
+					"name": "materias",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "54.234.110.157:3000/api/materias",
+							"host": [
+								"54",
+								"234",
+								"110",
+								"157"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"materias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "materia",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"{{$randomWord}}\",\r\n    \"maestro_correo\": \"roberto.sanchez@mail.com\",\r\n    \"create_user\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "54.234.110.157:3000/api/materias",
+							"host": [
+								"54",
+								"234",
+								"110",
+								"157"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"materias"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "calificaciones",
+			"item": [
+				{
+					"name": "calificaciones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "54.234.110.157:3000/api/calificaciones",
+							"host": [
+								"54",
+								"234",
+								"110",
+								"157"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"calificaciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "calificaciones",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"estudiante_matricula\": \"A002\",\n    \"maestro_correo\": \"roberto.sanchez@mail.com\",\n    \"materia_nombre\": \"Inteligencia Artificial\",\n    \"calificacion\": 80.7,\n    \"create_user\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "54.234.110.157:3000/api/calificaciones",
+							"host": [
+								"54",
+								"234",
+								"110",
+								"157"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"calificaciones"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
